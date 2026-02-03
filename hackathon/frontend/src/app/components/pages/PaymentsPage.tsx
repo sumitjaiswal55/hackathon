@@ -1,5 +1,8 @@
-import { motion } from "motion/react";
-import { CreditCard, FileText, Download, Clock, CheckCircle2, AlertCircle } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { CreditCard, FileText, Download, Clock, CheckCircle2, ShieldCheck, Wallet, ArrowRight } from "lucide-react";
+
+// UI Components
 import { Card } from "@/app/components/ui/card";
 import { Button } from "@/app/components/ui/button";
 import { Badge } from "@/app/components/ui/badge";
@@ -7,337 +10,202 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/ta
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
 import { Separator } from "@/app/components/ui/separator";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/app/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/app/components/ui/table";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/app/components/ui/dialog";
 
-interface PaymentsPageProps {
-  onNavigate: (page: string) => void;
-}
+export function PaymentsPage() {
+  const [activeTab, setActiveTab] = useState("payments");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
-export function PaymentsPage({ onNavigate }: PaymentsPageProps) {
-  const payments = [
-    {
-      id: "1",
-      date: "Feb 1, 2026",
-      type: "Rent",
-      amount: 18000,
-      status: "paid",
-      method: "UPI",
-    },
-    {
-      id: "2",
-      date: "Feb 5, 2026",
-      type: "Maintenance",
-      amount: 1500,
-      status: "paid",
-      method: "Credit Card",
-    },
-    {
-      id: "3",
-      date: "Mar 1, 2026",
-      type: "Rent",
-      amount: 18000,
-      status: "pending",
-      method: "-",
-    },
-    {
-      id: "4",
-      date: "Jan 1, 2026",
-      type: "Rent",
-      amount: 18000,
-      status: "paid",
-      method: "UPI",
-    },
-  ];
+  // --- Real State for Transactions ---
+  const [payments, setPayments] = useState([
+    { id: "1", date: "Feb 1, 2026", type: "Rent", amount: 18000, status: "paid", method: "UPI" },
+    { id: "2", date: "Feb 5, 2026", type: "Maintenance", amount: 1500, status: "paid", method: "Credit Card" },
+    { id: "3", date: "Mar 1, 2026", type: "Rent", amount: 18000, status: "pending", method: "-" },
+  ]);
 
-  const agreements = [
-    {
-      id: "1",
-      property: "Modern 2BHK Near IIT Delhi",
-      startDate: "Jan 1, 2026",
-      endDate: "Dec 31, 2026",
-      rent: 18000,
-      deposit: 36000,
-      status: "active",
-    },
-  ];
+  // --- Payment Execution Logic ---
+  const handlePayment = () => {
+    setIsProcessing(true);
+    // Simulating Razorpay / Gateway delay
+    setTimeout(() => {
+      const newPayment = {
+        id: Math.random().toString(36).substr(2, 9),
+        date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+        type: "Rent",
+        amount: 18000,
+        status: "paid",
+        method: "UPI (Simulated)"
+      };
+      
+      setPayments([newPayment, ...payments.filter(p => p.id !== "3")]);
+      setIsProcessing(false);
+      setShowSuccess(true);
+      setActiveTab("payments");
+    }, 2000);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50/30 via-pink-50/30 to-blue-50/30">
-      <div className="container mx-auto px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <h1 className="text-3xl font-bold mb-2">Payments & Agreements</h1>
-          <p className="text-gray-600">Manage your rent payments and rental agreements</p>
-        </motion.div>
-
-        {/* Summary Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <Card className="p-6 bg-[--pastel-green]">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Next Payment Due</p>
-                  <p className="text-2xl font-bold">₹18,000</p>
-                  <p className="text-xs text-gray-600 mt-1">Due on Mar 1, 2026</p>
-                </div>
-                <div className="p-3 bg-white rounded-lg">
-                  <Clock className="w-6 h-6 text-orange-600" />
-                </div>
-              </div>
-              <Button className="w-full mt-4" size="sm">Pay Now</Button>
-            </Card>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50/50 via-purple-50/50 to-pink-50/50 py-10">
+      <div className="container mx-auto px-4 max-w-6xl">
+        
+        {/* Header with Trust Badge */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+            <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Financial Hub</h1>
+            <p className="text-muted-foreground flex items-center gap-2 mt-1">
+              <ShieldCheck className="w-4 h-4 text-green-600" /> Secure encrypted transactions
+            </p>
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Card className="p-6">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Total Paid</p>
-                  <p className="text-2xl font-bold">₹37,500</p>
-                  <p className="text-xs text-green-600 mt-1">This year</p>
-                </div>
-                <div className="p-3 bg-[--pastel-blue] rounded-lg">
-                  <CheckCircle2 className="w-6 h-6 text-[--pastel-blue-dark]" />
-                </div>
-              </div>
-            </Card>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Card className="p-6">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Security Deposit</p>
-                  <p className="text-2xl font-bold">₹36,000</p>
-                  <p className="text-xs text-gray-600 mt-1">Refundable</p>
-                </div>
-                <div className="p-3 bg-[--pastel-purple] rounded-lg">
-                  <CreditCard className="w-6 h-6 text-[--pastel-purple-dark]" />
-                </div>
-              </div>
-            </Card>
-          </motion.div>
+          <Badge variant="outline" className="px-4 py-1 text-sm bg-white shadow-sm border-green-200 text-green-700">
+            Wallet Balance: ₹0.00
+          </Badge>
         </div>
 
-        {/* Tabs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <Card className="p-6">
-            <Tabs defaultValue="payments">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="payments">Payment History</TabsTrigger>
-                <TabsTrigger value="agreements">Agreements</TabsTrigger>
-                <TabsTrigger value="make-payment">Make Payment</TabsTrigger>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <Card className="p-6 border-none shadow-xl bg-gradient-to-br from-orange-500 to-pink-600 text-white relative overflow-hidden">
+            <div className="relative z-10">
+              <p className="opacity-80 text-sm font-medium">Next Due Amount</p>
+              <h2 className="text-3xl font-bold mt-1">₹18,000</h2>
+              <p className="text-xs mt-4 flex items-center gap-1">
+                <Clock className="w-3 h-3" /> Due in 26 Days (Mar 1)
+              </p>
+              <Button variant="secondary" className="w-full mt-6 bg-white text-orange-600 hover:bg-orange-50" onClick={() => setActiveTab("make-payment")}>
+                Pay Now <ArrowRight className="ml-2 w-4 h-4" />
+              </Button>
+            </div>
+            <div className="absolute -right-4 -bottom-4 opacity-10"><Wallet className="w-32 h-32" /></div>
+          </Card>
+
+          <Card className="p-6 shadow-lg border-none bg-white">
+            <p className="text-muted-foreground text-sm font-medium">Total Paid (2026)</p>
+            <h2 className="text-3xl font-bold text-gray-900 mt-1">₹37,500</h2>
+            <div className="flex items-center gap-2 mt-4 text-green-600 text-sm">
+              <CheckCircle2 className="w-4 h-4" /> 100% On-time Record
+            </div>
+          </Card>
+
+          <Card className="p-6 shadow-lg border-none bg-white">
+            <p className="text-muted-foreground text-sm font-medium">Security Deposit</p>
+            <h2 className="text-3xl font-bold text-gray-900 mt-1">₹36,000</h2>
+            <p className="text-xs text-gray-500 mt-4 italic">Held by RentEase Trust Account</p>
+          </Card>
+        </div>
+
+        {/* Main Content Tabs */}
+        <Card className="shadow-2xl border-none bg-white/80 backdrop-blur-md overflow-hidden">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <div className="px-6 pt-6">
+              <TabsList className="grid w-full grid-cols-3 h-12 bg-gray-100/50 p-1">
+                <TabsTrigger value="payments" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">History</TabsTrigger>
+                <TabsTrigger value="agreements" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">Documents</TabsTrigger>
+                <TabsTrigger value="make-payment" className="data-[state=active]:bg-white data-[state=active]:shadow-sm text-purple-600 font-bold">Checkout</TabsTrigger>
               </TabsList>
+            </div>
 
-              <TabsContent value="payments" className="mt-6">
-                <div className="rounded-lg border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Amount</TableHead>
-                        <TableHead>Method</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Actions</TableHead>
+            <TabsContent value="payments" className="p-6">
+              <div className="rounded-xl border overflow-hidden">
+                <Table>
+                  <TableHeader className="bg-gray-50">
+                    <TableRow>
+                      <TableHead>Reference</TableHead>
+                      <TableHead>Description</TableHead>
+                      <TableHead>Amount</TableHead>
+                      <TableHead>Method</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Action</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {payments.map((p) => (
+                      <TableRow key={p.id} className="hover:bg-gray-50/50 transition-colors">
+                        <TableCell className="font-mono text-xs text-gray-500">#{p.id.toUpperCase()}</TableCell>
+                        <TableCell className="font-medium">{p.type} - {p.date}</TableCell>
+                        <TableCell className="font-bold">₹{p.amount.toLocaleString()}</TableCell>
+                        <TableCell className="text-sm">{p.method}</TableCell>
+                        <TableCell>
+                          <Badge className={p.status === "paid" ? "bg-green-100 text-green-700 border-none" : "bg-orange-100 text-orange-700 border-none"}>
+                            {p.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {p.status === "paid" && <Button size="sm" variant="ghost" className="h-8"><Download className="w-4 h-4" /></Button>}
+                        </TableCell>
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {payments.map((payment) => (
-                        <TableRow key={payment.id}>
-                          <TableCell>{payment.date}</TableCell>
-                          <TableCell>{payment.type}</TableCell>
-                          <TableCell className="font-semibold">₹{payment.amount.toLocaleString()}</TableCell>
-                          <TableCell>{payment.method}</TableCell>
-                          <TableCell>
-                            <Badge
-                              className={
-                                payment.status === "paid"
-                                  ? "bg-[--pastel-green] text-[--pastel-green-dark]"
-                                  : "bg-[--pastel-orange] text-[--pastel-orange-dark]"
-                              }
-                            >
-                              {payment.status === "paid" ? (
-                                <CheckCircle2 className="w-3 h-3 mr-1" />
-                              ) : (
-                                <Clock className="w-3 h-3 mr-1" />
-                              )}
-                              {payment.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            {payment.status === "paid" ? (
-                              <Button size="sm" variant="ghost">
-                                <Download className="w-4 h-4 mr-1" />
-                                Receipt
-                              </Button>
-                            ) : (
-                              <Button size="sm">Pay Now</Button>
-                            )}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="make-payment" className="p-10">
+              <div className="max-w-md mx-auto space-y-8">
+                <div className="text-center">
+                  <h3 className="text-2xl font-bold">Complete Payment</h3>
+                  <p className="text-sm text-gray-500">Transaction ID: TXN_992100</p>
                 </div>
-              </TabsContent>
+                
+                <div className="space-y-4">
+                  <div className="p-4 bg-purple-50 rounded-xl border border-purple-100">
+                    <div className="flex justify-between items-center text-sm mb-1">
+                      <span className="text-purple-700">Monthly Rent (March)</span>
+                      <span className="font-bold">₹18,000</span>
+                    </div>
+                    <div className="flex justify-between items-center text-xs text-purple-600">
+                      <span>Convenience Fee</span>
+                      <span>₹0.00 (Titan Plan)</span>
+                    </div>
+                  </div>
 
-              <TabsContent value="agreements" className="mt-6 space-y-6">
-                {agreements.map((agreement) => (
-                  <Card key={agreement.id} className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <h3 className="font-semibold text-lg mb-1">{agreement.property}</h3>
-                        <Badge className="bg-[--pastel-green] text-[--pastel-green-dark]">
-                          <CheckCircle2 className="w-3 h-3 mr-1" />
-                          {agreement.status}
-                        </Badge>
-                      </div>
-                      <Button variant="outline" size="sm">
-                        <Download className="w-4 h-4 mr-2" />
-                        Download PDF
+                  <div className="space-y-3 pt-4">
+                    <Label className="text-xs uppercase tracking-wider text-gray-500">Select Gateway</Label>
+                    <div className="grid grid-cols-1 gap-3">
+                      <Button variant="outline" className="h-16 justify-between px-6 border-2 hover:border-purple-500 group">
+                        <div className="flex items-center gap-4">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo.png/800px-UPI-Logo.png" className="h-4" alt="UPI" />
+                          <div className="text-left"><p className="font-bold">UPI Payment</p><p className="text-xs text-muted-foreground">Instant Settlement</p></div>
+                        </div>
+                        <CheckCircle2 className="w-5 h-5 text-purple-600" />
                       </Button>
                     </div>
-
-                    <Separator className="my-4" />
-
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="space-y-3">
-                        <div>
-                          <p className="text-sm text-gray-600">Contract Period</p>
-                          <p className="font-semibold">{agreement.startDate} - {agreement.endDate}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-gray-600">Monthly Rent</p>
-                          <p className="font-semibold">₹{agreement.rent.toLocaleString()}</p>
-                        </div>
-                      </div>
-                      <div className="space-y-3">
-                        <div>
-                          <p className="text-sm text-gray-600">Security Deposit</p>
-                          <p className="font-semibold">₹{agreement.deposit.toLocaleString()}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-gray-600">Agreement ID</p>
-                          <p className="font-mono text-sm">#AGR-{agreement.id.padStart(6, '0')}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <Separator className="my-4" />
-
-                    <div className="flex gap-3">
-                      <Button variant="outline" className="flex-1">
-                        <FileText className="w-4 h-4 mr-2" />
-                        View Terms
-                      </Button>
-                      <Button variant="outline" className="flex-1">
-                        Request Renewal
-                      </Button>
-                    </div>
-                  </Card>
-                ))}
-              </TabsContent>
-
-              <TabsContent value="make-payment" className="mt-6">
-                <div className="max-w-2xl mx-auto">
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="payment-type">Payment Type</Label>
-                      <select
-                        id="payment-type"
-                        className="w-full px-3 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-purple-500"
-                      >
-                        <option>Monthly Rent</option>
-                        <option>Maintenance</option>
-                        <option>Utilities</option>
-                        <option>Other</option>
-                      </select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="amount">Amount (₹)</Label>
-                      <Input id="amount" type="number" placeholder="18000" defaultValue="18000" />
-                    </div>
-
-                    <Card className="p-6 bg-[--pastel-blue]">
-                      <h3 className="font-semibold mb-4">Payment Method</h3>
-                      <div className="space-y-3">
-                        <Button variant="outline" className="w-full justify-start bg-white">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                              <CreditCard className="w-5 h-5 text-purple-600" />
-                            </div>
-                            <div className="text-left">
-                              <p className="font-semibold">UPI</p>
-                              <p className="text-xs text-gray-600">Google Pay, PhonePe, Paytm</p>
-                            </div>
-                          </div>
-                        </Button>
-                        <Button variant="outline" className="w-full justify-start bg-white">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                              <CreditCard className="w-5 h-5 text-blue-600" />
-                            </div>
-                            <div className="text-left">
-                              <p className="font-semibold">Credit/Debit Card</p>
-                              <p className="text-xs text-gray-600">Visa, Mastercard, Rupay</p>
-                            </div>
-                          </div>
-                        </Button>
-                        <Button variant="outline" className="w-full justify-start bg-white">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                              <CreditCard className="w-5 h-5 text-green-600" />
-                            </div>
-                            <div className="text-left">
-                              <p className="font-semibold">Net Banking</p>
-                              <p className="text-xs text-gray-600">All major banks</p>
-                            </div>
-                          </div>
-                        </Button>
-                      </div>
-                    </Card>
-
-                    <Button className="w-full" size="lg">
-                      Proceed to Payment
-                    </Button>
-
-                    <p className="text-xs text-center text-gray-600">
-                      Your payment is secured with 256-bit SSL encryption
-                    </p>
                   </div>
                 </div>
-              </TabsContent>
-            </Tabs>
-          </Card>
-        </motion.div>
+
+                <Button className="w-full h-14 text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600" onClick={handlePayment} disabled={isProcessing}>
+                  {isProcessing ? "Connecting to Bank..." : `Pay ₹18,000 Now`}
+                </Button>
+              </div>
+            </TabsContent>
+
+            {/* Agreements Content (Static PDF Cards) */}
+            <TabsContent value="agreements" className="p-6">
+               <Card className="p-6 border-dashed border-2 bg-gray-50/50 flex items-center justify-between">
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 bg-white rounded-lg shadow-sm flex items-center justify-center text-red-500"><FileText /></div>
+                    <div><p className="font-bold text-gray-900">Registered Rent Agreement.pdf</p><p className="text-xs text-gray-500">E-Signed on Jan 1, 2026</p></div>
+                  </div>
+                  <Button variant="outline">Download</Button>
+               </Card>
+            </TabsContent>
+          </Tabs>
+        </Card>
+
+        {/* Success Modal */}
+        <Dialog open={showSuccess} onOpenChange={setShowSuccess}>
+          <DialogContent className="sm:max-w-md">
+            <div className="flex flex-col items-center justify-center py-10 text-center">
+              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
+                <CheckCircle2 className="w-12 h-12" />
+              </motion.div>
+              <h2 className="text-2xl font-bold">Payment Successful!</h2>
+              <p className="text-gray-500 mt-2">Rent for March 2026 has been settled. Your receipt has been sent to your email.</p>
+              <Button className="mt-8 w-full" onClick={() => setShowSuccess(false)}>Back to Dashboard</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
       </div>
     </div>
   );

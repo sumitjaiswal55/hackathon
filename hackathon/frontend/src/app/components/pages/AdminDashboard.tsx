@@ -117,7 +117,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
               <p className="text-gray-600">Overview of platform performance and metrics</p>
             </div>
             <Button onClick={() => onNavigate("dashboard")}>
-              Switch to Tenant View
+              Add New Listing
             </Button>
           </div>
         </motion.div>

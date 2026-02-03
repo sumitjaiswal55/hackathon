@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"; // Navigation support
 import { motion } from "motion/react";
 import { Utensils, Calendar, Clock, Star, Plus, TrendingUp, Users, CheckCircle2 } from "lucide-react";
 import { Card } from "@/app/components/ui/card";
@@ -12,6 +13,8 @@ interface MessPageProps {
 }
 
 export function MessPage({ onNavigate }: MessPageProps) {
+  const navigate = useNavigate(); // Standard navigation hook
+
   const messServices = [
     {
       id: "1",
@@ -102,7 +105,7 @@ export function MessPage({ onNavigate }: MessPageProps) {
             transition={{ delay: 0.1 }}
             className="mb-8"
           >
-            <Card className="p-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+            <Card className="p-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xl shadow-purple-100">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
@@ -123,7 +126,10 @@ export function MessPage({ onNavigate }: MessPageProps) {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Button variant="secondary">View Menu</Button>
+                  {/* ✅ Navigate to Menu Page */}
+                  <Button variant="secondary" onClick={() => navigate("/mess-meal")}>
+                    View Menu
+                  </Button>
                   <Button variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white">
                     Manage Subscription
                   </Button>
@@ -133,82 +139,66 @@ export function MessPage({ onNavigate }: MessPageProps) {
           </motion.div>
         )}
 
-        {/* Summary Stats */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
+        {/* ✅ FIXED SECTION: Summary Stats including Monthly Cost */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
             <Card className="p-6">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">Monthly Cost</p>
                   <p className="text-2xl font-bold">₹{currentSubscription.price}</p>
-                  <p className="text-xs text-gray-600 mt-1">Per person</p>
+                  <p className="text-xs text-gray-500 mt-1">Per person</p>
                 </div>
-                <div className="p-3 bg-[--pastel-green] rounded-lg">
-                  <Utensils className="w-6 h-6 text-[--pastel-green-dark]" />
+                <div className="p-3 bg-green-50 rounded-lg">
+                  <Utensils className="w-6 h-6 text-green-600" />
                 </div>
               </div>
             </Card>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
             <Card className="p-6">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Meals This Month</p>
+                  <p className="text-sm text-gray-600 mb-1">Consumed</p>
                   <p className="text-2xl font-bold">{currentSubscription.totalMeals - currentSubscription.mealsLeft}</p>
-                  <p className="text-xs text-green-600 mt-1">of {currentSubscription.totalMeals}</p>
+                  <p className="text-xs text-green-600 mt-1">Meals this month</p>
                 </div>
-                <div className="p-3 bg-[--pastel-blue] rounded-lg">
-                  <Calendar className="w-6 h-6 text-[--pastel-blue-dark]" />
+                <div className="p-3 bg-blue-50 rounded-lg">
+                  <Calendar className="w-6 h-6 text-blue-600" />
                 </div>
               </div>
             </Card>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
             <Card className="p-6">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">Avg. Cost/Meal</p>
                   <p className="text-2xl font-bold">₹{Math.round(currentSubscription.price / currentSubscription.totalMeals)}</p>
-                  <p className="text-xs text-gray-600 mt-1">Great savings!</p>
+                  <p className="text-xs text-purple-600 mt-1">Great savings!</p>
                 </div>
-                <div className="p-3 bg-[--pastel-purple] rounded-lg">
-                  <TrendingUp className="w-6 h-6 text-[--pastel-purple-dark]" />
+                <div className="p-3 bg-purple-50 rounded-lg">
+                  <TrendingUp className="w-6 h-6 text-purple-600" />
                 </div>
               </div>
             </Card>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
             <Card className="p-6">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Rating</p>
+                  <p className="text-sm text-gray-600 mb-1">Trust Rating</p>
                   <div className="flex items-center gap-1">
                     <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                     <p className="text-2xl font-bold">4.8</p>
                   </div>
-                  <p className="text-xs text-gray-600 mt-1">Your mess rating</p>
+                  <p className="text-xs text-gray-500 mt-1">User satisfaction</p>
                 </div>
-                <div className="p-3 bg-[--pastel-orange] rounded-lg">
-                  <Star className="w-6 h-6 text-[--pastel-orange-dark]" />
+                <div className="p-3 bg-orange-50 rounded-lg">
+                  <Star className="w-6 h-6 text-orange-600" />
                 </div>
               </div>
             </Card>
@@ -216,193 +206,91 @@ export function MessPage({ onNavigate }: MessPageProps) {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Available Services */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-            >
-              <Card className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold">Available Mess Services</h2>
-                  <Button variant="outline" size="sm">
-                    View All
-                  </Button>
-                </div>
+            <Card className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold">Available Mess Services</h2>
+                <Button variant="outline" size="sm">View All</Button>
+              </div>
 
-                <div className="space-y-4">
-                  {messServices.map((mess, index) => (
-                    <motion.div
-                      key={mess.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.7 + index * 0.1 }}
-                      whileHover={{ scale: 1.01 }}
-                    >
-                      <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                        <div className="flex flex-col md:flex-row">
-                          <div className="relative md:w-48">
-                            <img
-                              src={mess.image}
-                              alt={mess.name}
-                              className="w-full h-48 md:h-full object-cover"
-                            />
-                            {mess.featured && (
-                              <Badge className="absolute top-3 left-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">
-                                <TrendingUp className="w-3 h-3 mr-1" />
-                                Featured
-                              </Badge>
-                            )}
+              <div className="space-y-4">
+                {messServices.map((mess, index) => (
+                  <motion.div
+                    key={mess.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.7 + index * 0.1 }}
+                  >
+                    <Card className="overflow-hidden hover:shadow-lg transition-shadow border-none shadow-sm bg-white">
+                      <div className="flex flex-col md:flex-row">
+                        <div className="relative md:w-48">
+                          <img src={mess.image} alt={mess.name} className="w-full h-48 md:h-full object-cover" />
+                        </div>
+                        <div className="p-5 flex-1">
+                          <div className="flex items-start justify-between mb-3">
+                            <div>
+                              <h3 className="font-bold text-lg">{mess.name}</h3>
+                              <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
+                                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" /> {mess.rating} ({mess.reviews})
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-2xl font-black text-slate-900">₹{mess.price}</p>
+                              <p className="text-[10px] uppercase font-bold text-gray-400 tracking-tighter">per month</p>
+                            </div>
                           </div>
-                          <div className="p-4 flex-1">
-                            <div className="flex items-start justify-between mb-3">
-                              <div>
-                                <h3 className="font-semibold text-lg mb-1">{mess.name}</h3>
-                                <div className="flex items-center gap-3 text-sm text-gray-600">
-                                  <div className="flex items-center gap-1">
-                                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                                    {mess.rating} ({mess.reviews})
-                                  </div>
-                                  <span>•</span>
-                                  <span>{mess.distance}</span>
-                                </div>
-                              </div>
-                              <div className="text-right">
-                                <p className="text-2xl font-bold">₹{mess.price}</p>
-                                <p className="text-xs text-gray-600">/month</p>
-                              </div>
-                            </div>
-
-                            <div className="flex flex-wrap gap-2 mb-4">
-                              <Badge variant="secondary">
-                                <Utensils className="w-3 h-3 mr-1" />
-                                {mess.meals}
-                              </Badge>
-                              <Badge className="bg-[--pastel-green] text-[--pastel-green-dark]">
-                                {mess.type}
-                              </Badge>
-                            </div>
-
-                            <div className="flex gap-2">
-                              <Button variant="outline" className="flex-1">View Menu</Button>
-                              <Button className="flex-1">Subscribe</Button>
-                            </div>
+                          
+                          <div className="flex gap-2 mt-6">
+                            <Button variant="outline" className="flex-1 rounded-xl" onClick={() => navigate("/mess-meal")}>
+                              View Menu
+                            </Button>
+                            <Button className="flex-1 rounded-xl bg-slate-900">Subscribe</Button>
                           </div>
                         </div>
-                      </Card>
-                    </motion.div>
-                  ))}
-                </div>
-              </Card>
-            </motion.div>
+                      </div>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+            </Card>
           </div>
 
-          {/* Sidebar */}
           <div className="space-y-6">
-            {/* This Week's Menu */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-            >
-              <Card className="p-6">
-                <h3 className="font-semibold mb-4 flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
-                  This Week's Menu
-                </h3>
-                <Tabs defaultValue={weekMenu[0].day}>
-                  <TabsList className="grid w-full grid-cols-3">
-                    {weekMenu.map((day) => (
-                      <TabsTrigger key={day.day} value={day.day} className="text-xs">
-                        {day.day.slice(0, 3)}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
+            <Card className="p-6 rounded-2xl shadow-sm border-none bg-white">
+              <h3 className="font-bold mb-4 flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-purple-500" /> Weekly Menu
+              </h3>
+              <Tabs defaultValue={weekMenu[0].day}>
+                <TabsList className="grid w-full grid-cols-3 bg-slate-50 p-1 rounded-xl">
                   {weekMenu.map((day) => (
-                    <TabsContent key={day.day} value={day.day} className="space-y-3 mt-4">
-                      <div>
-                        <p className="text-xs text-gray-600 mb-1">Breakfast</p>
-                        <p className="text-sm font-medium">{day.breakfast}</p>
-                      </div>
-                      <Separator />
-                      <div>
-                        <p className="text-xs text-gray-600 mb-1">Lunch</p>
-                        <p className="text-sm font-medium">{day.lunch}</p>
-                      </div>
-                      <Separator />
-                      <div>
-                        <p className="text-xs text-gray-600 mb-1">Dinner</p>
-                        <p className="text-sm font-medium">{day.dinner}</p>
-                      </div>
-                    </TabsContent>
+                    <TabsTrigger key={day.day} value={day.day} className="text-xs font-bold">{day.day.slice(0, 3)}</TabsTrigger>
                   ))}
-                </Tabs>
-              </Card>
-            </motion.div>
-
-            {/* Meal Sharing */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 }}
-            >
-              <Card className="p-6">
-                <h3 className="font-semibold mb-4 flex items-center gap-2">
-                  <Users className="w-5 h-5" />
-                  Sharing with Roommates
-                </h3>
-                <div className="space-y-3">
-                  {[
-                    { name: "Priya", avatar: "P", plan: "Lunch & Dinner" },
-                    { name: "Rahul", avatar: "R", plan: "Dinner only" },
-                  ].map((roommate) => (
-                    <div key={roommate.name} className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="w-10 h-10">
-                          <AvatarFallback>{roommate.avatar}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-semibold text-sm">{roommate.name}</p>
-                          <p className="text-xs text-gray-600">{roommate.plan}</p>
-                        </div>
-                      </div>
-                      <Badge variant="secondary" className="bg-[--pastel-green] text-[--pastel-green-dark]">
-                        Active
-                      </Badge>
+                </TabsList>
+                {weekMenu.map((day) => (
+                  <TabsContent key={day.day} value={day.day} className="space-y-4 mt-6">
+                    <div className="p-3 bg-slate-50 rounded-xl">
+                      <p className="text-[10px] uppercase font-bold text-gray-400">Breakfast</p>
+                      <p className="text-sm font-semibold">{day.breakfast}</p>
                     </div>
-                  ))}
-                </div>
-                <Button variant="outline" className="w-full mt-4" size="sm">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Invite Roommate
-                </Button>
-              </Card>
-            </motion.div>
-
-            {/* Tips */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.0 }}
-            >
-              <Card className="p-6 bg-gradient-to-br from-orange-500 to-pink-500 text-white">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 bg-white/20 rounded-lg">
-                    <Clock className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Meal Timings</h3>
-                    <div className="text-sm text-white/90 space-y-1">
-                      <p>Breakfast: 7:00 AM - 9:00 AM</p>
-                      <p>Lunch: 12:00 PM - 2:00 PM</p>
-                      <p>Dinner: 7:00 PM - 9:00 PM</p>
+                    <div className="p-3 bg-slate-50 rounded-xl">
+                      <p className="text-[10px] uppercase font-bold text-gray-400">Lunch</p>
+                      <p className="text-sm font-semibold">{day.lunch}</p>
                     </div>
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
+                    <div className="p-3 bg-slate-50 rounded-xl">
+                      <p className="text-[10px] uppercase font-bold text-gray-400">Dinner</p>
+                      <p className="text-sm font-semibold">{day.dinner}</p>
+                    </div>
+                  </TabsContent>
+                ))}
+              </Tabs>
+              <Button 
+                variant="ghost" 
+                className="w-full mt-6 text-purple-600 font-bold hover:bg-purple-50 rounded-xl"
+                onClick={() => navigate("/mess-meal")}
+              >
+                Full Nutrition Data &rarr;
+              </Button>
+            </Card>
           </div>
         </div>
       </div>

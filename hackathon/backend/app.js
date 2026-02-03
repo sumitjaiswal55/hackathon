@@ -8,6 +8,12 @@ const authRoutes = require("./routes/auth");
 const propertyRoutes = require("./routes/property")
 const app = express();
 
+const cors = require('cors');
+app.use(cors({
+    origin: 'http://localhost:5173', // Vite ka URL
+    credentials: true
+}));
+
 // Middleware (JSON data handle karne ke liye)
 app.use(express.json());
 
