@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { MessMeal } from "@/app/components/pages/MessMeal";
+import {ProfilePage} from "@/app/components/pages/ProfilePage";
 
 // Pages & Components
 import { Navbar } from "@/app/components/Navbar";
@@ -52,7 +53,7 @@ export default function App() {
           <Route path="/mess" element={<ProtectedRoute><MessPage /></ProtectedRoute>} />
           <Route path="/mess-meal" element={<ProtectedRoute><MessMeal /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-
+          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
